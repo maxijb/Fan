@@ -1,0 +1,94 @@
+@charset "utf-8";
+/* CSS Document */
+
+#content { padding:0; background : #fff; }
+#header { background: #262a2d url(img/back_header.jpg) center top repeat-x; text-align:left; overflow:hidden; height:78px; text-align:left}
+#header img {margin: 0 0 0 10px; }
+#logo {float:left; margin-left:10px;}
+#botones { float: right; background: none; margin-right:10px;}	
+
+
+
+
+#header a { margin:10px 15px 0 0; min-width:30px; background:center top no-repeat; padding-top:40px; text-decoration:none; display:inline-block; }
+#header a#home { background-image:url(img/iconos_01.png) }
+#header a#ultimo { background-image:url(img/iconos_04.png) }
+#header a#masleido { background-image:url(img/iconos_02.png)}
+#header a#buscar { background-image:url(img/iconos_03.png)  }
+
+#header a span { background:#0066CC;  color: #fff; font-size:10px; padding:4px 5px; font-weight:normal; text-align:center; margin:auto; 
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-background-clip: padding-box;
+  -moz-background-clip:    padding;
+  background-clip:         padding-box;
+}
+
+#header a:active span { background:#990;}
+
+
+
+@media all and (max-width: 600px) {
+	#botones { clear:both; background-color:#0066CC; float:none; margin: 0}	
+	#header { text-align:center; height:auto;}
+	#header img {margin: auto; float:none; }
+	#header a { margin:0px 5px 0 0; min-width:37px; min-height:25px; background:left top no-repeat; padding: 13px 0px 0px 25px; ; text-decoration:none; display:inline-block; text-align:left;  }
+	#header a#ultimo { padding-left:34px;}
+	#header a span { font-size:10px; background:none; padding:0 }
+	#header a:active span { background:none; color: #990; text-shadow:#000;}
+	
+}
+
+#busqueda { height:0; clear:both; text-align:center; padding: 5px; background:#9C0; -webkit-transition : height 0.4s linear; transition :height 0.4s linear; overflow:hidden  }
+#busqueda * { margin:5px auto}
+#loader { position: fixed; width:36px; height:36px; left:50%; top:50%; margin-top:-18px; margin-left:-18px; border: 1px #9591CD solid; border-radius: 5px; background: #fff url(img/loader.gif) center no-repeat}
+
+
+.abierto .imagen {display:none}
+.abierto .mm .imagen { display:inline-block}
+.imagen { width:80px; height:80px; float:left; margin-right:7px;}
+.articulo { clear:left; height: 80px; margin:0; padding:0;}
+.articulo.abierto { height:auto; padding:5px 5px 20px 5px; background: #fff }
+.articulo p {margin:0;}
+.even { background:#ddd}
+.titular { font-weight:bold; font-size:110%; }
+.titular.activo { color:#999900;}
+.articulo.abierto { font-size:140%;}
+.volanta { text-transform:uppercase; white-space:nowrap; text-overflow: ellipsis; font-size:80%; color:#666; padding-top:5px}
+#subheader { background: #0089df; color:#fff; padding:6px 5px}
+#subheader a { color: #fff; font-size:90%; padding:3px; margin-top:3px;}
+#subheader a:active {color:#000;}
+#navegacion { background: #0089df; color:#000; text-align:center; padding:10px 5px; font-size:90%; text-shadow:none; font-weight:bold;}
+#navegacion a { color:#fff; padding:5px 10px; border:1px solid #fff;  text-decoration: none;  
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-background-clip: padding-box;
+  -moz-background-clip:    padding;
+  background-clip:         padding-box;
+}
+#navegacion a, #navegacion span { margin-right:12px;}
+.imagen .imageButton { display:none;}
+.imagen.video .imageButton { background: rgba(0,0,0,.3) url(img/play.png) center no-repeat; width: 100%; height:80px; display:block; }
+
+.bajada { display:block; clear:left; font-size:80%; color:#999; margin: 5px 0 10px 0;} 
+.cuerpo { display:block; clear:left; font-size:80%; margin-top:10px; text-align:justify}
+.cuerpo p {margin-top:4px; }
+.mm { overflow:hidden}
+.back {float:right; display:none;}
+.abierto .back {display:block; }
+
+#footer { font-weight:normal; padding:0 10px; text-align:center; width:auto;}
+#footer strong { font-weight:bold; color:#9C0;}
+#footer p {width:auto; }
+#fondo { position: absolute; display:none; left: 0; top:0; background-color:#000;}
+#fondo.loader { background-image:url(img/loader.gif); background-position: center; background-repeat: no-repeat;}
+#fondo img {max-width:100%; }
+
+#fondo .pantalla { position:absolute; -webkit-transition : left 0.4s linear; transition :left 0.4s linear;}
+
+p.mensaje { padding: 20px 10px; font-weight: bold; color: blue; }
+
+#publicidad { text-align:center; }
+#publicidad img { margin: 0 auto; max-width: 100%; max-height: 300px; }

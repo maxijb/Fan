@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Fan</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_image_viewer">Image Viewer</string>
+    <string name="home">Inicio</string>
+    <string name="ultimos">Ultimas noticias</string>
+    <string name="mas_leidas">Más leídas</string>
+    <string name="buscar">Buscar</string>
+
+</resources>

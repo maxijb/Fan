@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/home"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/home"/>
+    <item
+        android:id="@+id/ultimos"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/ultimos"/>
+    <item
+        android:id="@+id/mas_leidas"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/mas_leidas"/>
+    <item
+        android:id="@+id/buscar"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/buscar"/>
+
+</menu>

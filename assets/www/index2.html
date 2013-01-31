@@ -1,0 +1,575 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>FanNumero1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<link href="jquery.mobile-1.0.1.min.css" type="text/css" rel="stylesheet" />
+<link href="app.css" type="text/css" rel="stylesheet" />
+<script src="jquery-1.7.1.min.js"></script>
+<script src="jquery.mobile-1.0.1.min.js"></script>
+
+</head>
+
+<body>
+
+
+<div id="fondo"></div>
+
+<div id="indexPage"> 
+	
+	<div id="header">
+    	<img src="img/logo.png" id="logo" />
+    	<div id="botones">
+            <a class="boton" id="home" href="?seccion=home&offset=0"><span>Home</span></a>
+            <a class="boton" id="ultimo" href="?seccion=ultimo&offset=0"><span>Ultimos</span></a>
+            <a class="boton" id="masleido" href="?seccion=masleido&offset=0"><span>Más leídas</span></a>
+            <a class="boton" id="buscar"><span>Buscar</span></a>            
+        </div>
+        
+    </div> 
+    <div id='busqueda'>
+        	
+     </div>   
+	<div data-role="content" id="content" >
+       
+    </div> 
+    <div id="publicidad">
+    	<img src="http://www.fannumero1.com.ar/m/publiMovil.php" />
+    </div>
+	<div data-role="footer" id="footer">
+    <p><strong>FanNumero1.com.ar</strong> es una publicacion de deportes para la ciudad de Cañuelas.<br />
+Director propietario: <strong>Adrián Monod.</strong> 
+	</div> 
+	
+</div> 
+
+
+
+
+
+
+</body>
+<script src="mustache.js"></script>
+<script type="text/javascript">
+	var DOMINIO = "http://fannumero1.com.ar/";
+	
+	 $(window).load(function() {
+		try {
+			Android.hideSplash(); 
+		}
+		catch (e) {
+			console.log("Error: Android no esta listo");	
+		}
+	 });
+	
+	
+	 $(document).bind("DOMContentLoaded", function() {
+		 urls = new Array("#indexPage?seccion=home&offset=0");
+
+	 	jQuery.support.cors = true;
+		//$.mobile.changePage.defaults.allowSamePageTransition = true;
+		$.mobile.loadingMessage = "Cargando datos...";
+		nextPage = "#indexPage";
+	 	template = ""; //crea el template
+					$.ajax({
+						'url':'articulo.mustache',
+						'type':'GET',
+						'async':false,
+						'cache': true,
+						'data': {},
+						'dataType': 'html',
+						'success':function(d){
+								template = d;
+							 }
+					 });
+					 
+			/*		 
+			$(window).on('orientationchange',function(event){
+				
+      			  if ($("#fondo").is(":visible")) cargarFondo(true);
+		    });
+			*/
+			$(window).on("resize", function(event) {
+				event.stopImmediatePropagation();
+				 if ($("#fondo").is(":visible")) cargarFondo(true);
+				 
+			});
+			
+			
+			
+			$("#fondo").on("swipeleft", function(event) {  event.stopImmediatePropagation(); proximaImagen("next"); })
+			 		   .on("swiperight", function(event) {event.stopImmediatePropagation(); proximaImagen("prev"); });
+			
+			
+			
+	$("#header a:not(#buscar)").click(function(event) {
+		event.stopImmediatePropagation();
+		if ($("#busqueda").height() > 0) $("#buscar").click(); 
+		var query = nextPage + $(this).attr('href');
+		urls.push(query);
+		$.mobile.changePage(query,"", true, true);
+		
+		return false;
+	});
+	
+	
+	$("#buscar").click(function(event) {
+		event.stopImmediatePropagation();
+		
+		if ($("#busqueda").css("height") == "0px")
+			{
+		
+				$("#busqueda").empty().append('<input type="text" id="buscarInput" placeholder="Que buscás?" />\
+             							<a data-role="button" data-transition="fade" data-theme="b" onclick="buscarTexto()">Buscar</a>')
+					.trigger('create')										
+					.css({height: "105px"})
+					.children().show();
+				
+			}
+		else	{
+			$("#busqueda").empty().css({height: "0px"});
+			
+		}
+	});
+	
+
+	
+	
+	$(".articulo:not('.abierto')").live("click", function(event) {
+		event.stopImmediatePropagation();
+		var query = nextPage + "?id=" + $(this).closest(".articulo").attr('id');
+		urls.push(query);
+		$.mobile.changePage(query,"", true, true);
+		
+		return false;
+	}).live("vmousedown", function() {
+			$(this).addClass('activo');
+	}).live("vmouseup", function() {
+			$(this).removeClass('activo');
+	});
+	
+	
+	$(".articulo.abierto").find("div.imagen").live("click", function(event) {
+		
+		//event.stopPropagation();
+		event.stopImmediatePropagation();
+		//event.preventDefault();
+		//event.bubbles = false;
+		fullScreen(this, "", true);		
+	});
+	
+				
+			swipeAllowed = true; //permite los swipes
+			readyLoad = false;
+			readyTrans = true;
+			parsearURL("");
+			cargarContent();	
+			
+			
+	$("#buscarButton").on("vclick", function(event) {
+		event.stopImmediatePropagation();
+		buscarTexto();
+		});
+			
+			
+			
+				 
+	 });
+	 
+	 
+	 
+	 
+ 
+		 
+	 
+	 
+	 
+	 function buscarTexto() {
+		console.log("buscar");
+		var query = nextPage + "?offset=0&buscar=" + $("#buscarInput").val();
+		$("#busqueda").empty().css('height', 0);
+		$.mobile.changePage(query,"", true, true);
+		
+		return false;
+	 }
+	 
+	 
+	/* $("#indexPage").live('pageinit', function() {
+               	
+				if (!window.opciones) { //si no esta inicialiazdo el array, es porque esta booteando
+					
+				}
+				
+				});*/
+
+	
+	function cargarContent() {
+		
+		$.mobile.showPageLoadingMsg();
+				
+				$.ajax({
+					url:DOMINIO+"m/api.php",
+					data: opciones, 
+					cache: true,
+					error: function(jqXHR, textStatus, errorThrown) { alert("Sin conexion a la red."); },
+					success: function(data) {
+							
+							if (data.status == "ok") {
+								
+								var poner = "";
+								for (var i in data.resultados)
+									{
+									var este = data.resultados[i];
+
+									var abierto = opciones.id == 0 ? false : true;
+									poner += renderItem(este, abierto);
+									
+									}
+								
+								//console.log(nextPage);
+								if (data.navegacion == null) data.navegacion = "";
+								$("#content", nextPage).html(poner+data.navegacion).find("div.articulo:even").addClass("even");
+								$(document).scrollTop(0);
+								$("#busqueda").empty().css({height: 0});
+								//nextPage = (nextPage == "#indexPage") ? "#indexPage2" : "#indexPage";
+								//$('#indexPage').page();
+								//$.mobile.changePage("#indexPage","none",false,false);
+								
+								}
+							else {
+								$("#content", nextPage).html("<p class='mensaje'>"+data.mensaje+ "</p>");
+								
+								}
+								$.mobile.hidePageLoadingMsg();
+							}, 
+					dataType: "json"					
+					
+				});	
+	}
+
+
+
+	function renderItem(este, abierto) {
+		
+		function formatoImagen(t) {
+			var video = "", imagen = t, imagePath ="", link = "";
+			
+			var ext = t.substr(t.length-4).toLowerCase(); //extension del mm
+	
+			if ( ext == '.jpg')
+				{
+				video = "";
+				imagePath = DOMINIO+"image_resizer.php?image=img/ids/"+t+"&width=100&height=100&cropratio=1:1";
+				link = "";
+				}
+			else if (ext == '.mp3') {
+				video = "sonido";
+				link = "";
+			}
+			else {
+				video = "video";
+				imagePath = DOMINIO+"image_resizer.php?image=http://i.ytimg.com/vi/"+t+"/2.jpg&width=100&height=100&cropratio=1:1";
+				link = "http://m.youtube.com/watch?gl=AR&hl=en&client=mv-google&feature=m-feedf&v="+t;
+			}
+			return {video: video, imagen: imagen, imagePath: imagePath, link:link };
+		}
+		
+		
+		function renderImagen(mm) {
+			var datosImagen = formatoImagen(mm);
+			// return '<div class="imagen '+datosImagen.video+'" data-imagen="'+datosImagen.imagen+'" style="background-image: url('+datosImagen.imagePath+')"><a class="imageButton" href="'+datosImagen.link+'"></a></div>';
+			return '<div class="imagen '+datosImagen.video+'" data-imagen="'+datosImagen.imagen+'" style="background-image: url('+datosImagen.imagePath+')"><div class="imageButton"></div></div>';
+		}
+		
+		
+		//maxi = este.cuerpo;
+		itemTemplate = {
+									abierto: function() {return (abierto) ? "abierto": ""}, 
+									codigo: este.codigo,
+									titular: este.titular,
+									volanta: este.volanta,	
+									bajada: este.bajada,
+									cuerpo: este.cuerpo
+									
+								}	
+		
+		if (este.mm[0] != "" && !abierto) {
+			var img = este.mm[0]; 
+			var img = formatoImagen(img); 
+			itemTemplate.video = img.video;
+			itemTemplate.imagen = img.imagen;
+			itemTemplate.imagePath = img.imagePath;
+			itemTemplate.link = img.link;
+		}
+		else if (este.mm[0] == "")
+			{
+				
+			itemTemplate.video = "none";
+			}
+		
+		if (abierto) {
+			itemTemplate.mm = "";
+			for (var i in este.mm) {
+				itemTemplate.mm += renderImagen(este.mm[i]);
+			}
+			//console.log(itemTemplate.mm);
+		}
+		
+		
+		var html = Mustache.to_html(template, itemTemplate);         
+		//console.log(html);
+		return html;		
+	
+	}
+
+
+	function iraOffset(num) {
+		opciones.offset = num;
+		var url = nextPage+"?"+serializarURL();
+		urls.push(url);
+		$.mobile.changePage(url,"", true, true);
+	}
+	
+	
+	
+	
+	function proximaImagen(dir) {
+		//console.log(dir);		
+		if (swipeAllowed) {
+			var next = (dir == "next") ? $(lastImagen).next(".imagen") : $(lastImagen).prev(".imagen");
+			if (next.length) fullScreen(next, dir, false);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	function cargarFondo(resize, dir) {
+		
+		if (resize || !window.lastWidth) {
+			
+			var h = $(window).height();
+			var w = $(window).width();
+			lastWidth = w;
+			lastHeight = h;	
+		}
+		
+		
+		if (!$("#fondo").is(":visible") || resize)
+		{
+			var t = $(document).scrollTop();
+			
+		
+			$("#fondo").css({width: lastWidth+"px", height: lastHeight+"px", top: t+"px"}).addClass("loader").fadeIn(400, function() {
+				$("#indexPage").hide();
+				$(document).scrollTop(0);
+				$("#fondo").css({top: 0});
+			});	
+		
+		}
+		
+		if (resize) {
+			$("#fondo .pantalla").remove();
+			readyTrans = true;
+
+			fullScreen(lastImagen);
+			
+		}
+		
+		else {
+			var l = (dir == "next") ? -lastWidth : lastWidth;
+			
+			if (dir == "next" || dir == "prev")
+				{
+				$("#fondo .pantalla").css({left: l+"px"}).filter(":not(:last)").remove()
+					.end().on("webkitTransitionEnd", function() {
+						readyTrans = true;
+						console.log("reload" + readyLoad);
+
+						if (readyLoad) ponerImagen(image, lastWidth, lastHeight); 
+						});
+				}
+
+			
+		}
+		
+		//remove();
+		
+	}
+	
+	
+	
+	
+	
+	function fullScreen(obj, dir, resize) {
+		 if (!resize) resize = false;
+		
+		lastImagen = obj;
+		
+
+		
+		
+		if (!$(obj).hasClass("video")) {
+			var $images = $('.imagen:not(.video)');
+			var index = $(obj).index('.imagen:not(.video)');
+			console.log(index);
+			//no esta o hay un error entonces que muestre la primera
+			if (index == -1) index = 0;
+			var imageList = [];
+			$images.each(function() {
+				imageList.push($(this).data('imagen'));
+			});
+			imageList = imageList.join('*');
+			try {
+				Android.receiveImages(imageList, index.toString());
+			}
+			catch (e) {}
+			
+		} 
+		else { //si es video
+			var id = $(obj).data('imagen');
+			try {
+			 	Android.playVideo(id);
+			}
+			catch (e) {
+				window.location = "http://www.youtube.com/watch?v="+id;
+			} 
+		}
+	}
+	
+	
+function html5video() {
+		return !!document.createElement('video').canPlayType;
+	}
+		
+
+	
+	
+	
+	function ponerImagen(img, w, h) {
+
+			//$("#fondo .pantalla").remove();
+			console.log(img, img.width, readyLoad);
+			var hi = img.height; //(img.height > h)  // ? h: img.height; // si es mayor a la pantalla le damos tamaño de pantalla
+			var wi = img.width ; //(img.width > w); 
+			
+			ti = Math.floor((h-hi)/2);
+			li = Math.floor((w-wi)/2);
+			console.log(h, w, hi, wi, ti, li);
+			var imagen = $("<img></img>").addClass("pantalla").attr("src", img.src).css({width: wi+"px", height: hi+'px', top: ti+"px", left: li+'px'}).click(function() {cerrarFullScreen()});
+			$("#fondo").append(imagen);
+			swipeAllowed = true;
+			readyLoad = false;
+			readyTrans = false;
+			image = null;  
+		}
+	
+	
+	function cerrarFullScreen() {
+		readyTrans = true;
+		$("#indexPage").show();
+		$("#fondo").fadeOut(400, function() { $("#fondo .pantalla").remove(); });	
+	}
+	
+	
+	
+	$(document).bind( "pagebeforechange", function( e, data ) {
+
+	// We only want to handle changePage() calls where the caller is
+	// asking us to load a page by URL.
+	if ( typeof data.toPage === "string" ) {
+
+		// We are being asked to load a page by URL, but we only
+		// want to handle URLs that request the data for a specific
+		// category.
+		
+		parsearURL(data.toPage);
+		console.log(opciones);
+		cargarContent();
+		/*var u = $.mobile.path.parseUrl( data.toPage ),
+			re = /^#category-item/;
+
+		if ( u.hash.search(re) !== -1 ) {
+
+			// We're being asked to display the items for a specific category.
+			// Call our internal method that builds the content for the category
+			// on the fly based on our in-memory category data structure.
+			showCategory( u, data.options );
+
+			// Make sure to tell changePage() we've handled this call so it doesn't
+			// have to do anything.
+			e.preventDefault();
+		}*/
+	}
+	});
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	function parsearURL(url) {
+		opciones = {seccion: "", buscar: "", offset: 0, id: 0};		
+		if (url=="") {
+			url = window.location.href;
+			}
+		
+		var parts = url.split("?"); 
+		if (parts.length < 2) return 0;
+		
+		var vars = parts[1].split("&");
+		
+		for (var i in vars) {
+			var temp = vars[i].split("=");
+			opciones[temp[0]] = temp[1];
+		}
+		return 1;
+	}
+
+
+
+	function serializarURL() {
+		var temp = new Array();
+		for (var i in opciones) 
+			temp.push(i+"="+opciones[i]);
+		return temp.join("&");
+		
+	}	
+	
+	function pressBuscar() {
+			$("#buscar").click();
+	}
+	
+	 function handleBackButton() {
+		 
+      if ($("#busqueda").height() > 0) $("#buscar").click(); 
+				
+		if (urls.length > 1){
+			
+			$.mobile.changePage(urls[urls.length-2],"", true, true);
+			urls.pop();				
+		}
+		else {
+			try {
+				Android.backButtonPress();	
+			}
+			catch(e) {}
+		}
+	}
+
+</script>
+
+
+
+
+</html>
